@@ -68,7 +68,13 @@
             ele.attachEvent('on' + event, fn)
         }
     }
-    var numArr = [];
+    var numArr = [10, 32, 12, 33, 47, 17, 32, 12, 41, 54
+        , 10, 32, 12, 33, 47, 17, 32, 12, 41, 54
+        , 10, 32, 12, 33, 47, 17, 32, 12, 41, 54
+        , 10, 32, 12, 33, 47, 17, 32, 12, 41, 54
+        , 10, 32, 12, 33, 47, 17, 32, 12, 41, 54
+        , 10, 32, 12, 33, 47, 17, 32, 12
+    ];
 
 
     function inNum() {
@@ -117,18 +123,18 @@
 
         },
         leftout: function () {
-            if (this.checkout(numArr)) {
-                if (numArr.length != 0) {
-                    alert(numArr.shift(inNum()))
-                    console.log(numArr);
-                    arrNums.innerHTML = ""
-                    this.render(numArr);
-                    charts.innerHTML = "";
-                    this.renderchat(numArr);
-                } else {
-                    alert('数组以为空不能再清除')
-                }
+
+            if (numArr.length != 0) {
+                alert(numArr.shift(inNum()))
+                console.log(numArr);
+                arrNums.innerHTML = ""
+                this.render(numArr);
+                charts.innerHTML = "";
+                this.renderchat(numArr);
+            } else {
+                alert('数组以为空不能再清除')
             }
+
         },
         rightin: function () {
             if (this.checkout(numArr)) {
@@ -141,17 +147,15 @@
             }
         },
         rightout: function () {
-            if (this.checkout(numArr)) {
-                if (numArr.length != 0) {
-                    alert(numArr.pop(inNum()));
-                    console.log(numArr);
-                    arrNums.innerHTML = "";
-                    this.render(numArr);
-                    charts.innerHTML = "";
-                    this.renderchat(numArr);
-                } else {
-                    alert('数组以为空不能再清除')
-                }
+            if (numArr.length != 0) {
+                alert(numArr.pop(inNum()));
+                console.log(numArr);
+                arrNums.innerHTML = "";
+                this.render(numArr);
+                charts.innerHTML = "";
+                this.renderchat(numArr);
+            } else {
+                alert('数组以为空不能再清除')
             }
         },
         render: function (data) {
