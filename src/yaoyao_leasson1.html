@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>表单（一)</title>
+    <style>
+        html, body, form, span, button {
+            margin: 0;
+            padding: 0;
+        }
+
+        form {
+            width: 1000px;
+            height: 400px;
+            margin: 0 auto;
+            text-align: center;
+            margin-top: 200px;
+        }
+
+        input {
+            width: 200px;
+            height: 30px;
+            border-radius: 0.3em;
+            outline: none;
+            text-align: center;
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+            font-size: 18px;
+        }
+
+        #checking {
+            border-radius: 0.3em;
+            width: 80px;
+            height: 35px;
+            border: 1px solid rgb(46, 109, 166);
+            color: #fffffb;
+            background: rgb(52, 122, 183);
+            margin-left: 10px;
+        }
+
+        .empty {
+            color: rgb(204, 204, 204)
+        }
+
+        .redprop {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<form action="">
+    <span>名称：</span><input id="content" type="text">
+    <button id="checking">验证</button>
+    <p class="props"></p>
+
+</form>
+<script type="application/javascript">
+    var content = document.querySelector("#content");
+    var checking = document.querySelector("#checking");
+    var props = document.querySelector(".props")
+    function checkout() {
+        if (content.value == '') {
+            var emptyProp = document.createElement("span");
+            emptyProp.setAttribute('class', 'empty');
+            emptyProp.innerHTML = "必填写，长度为4-16个字符";
+            props.appendChild(emptyProp);
+        }
+    }
+    function addHandle(ele, event, fn) {
+        if (ele.addEventListener) {
+            ele.addEventListener(event, fn, false);
+        } else if (ele.attachEvent) {
+            ele.attachEvent(on + "event", fn)
+        }
+    }
+    ;
+
+    addHandle(content, 'focus', function () {
+        var emptyProp = document.querySelector(".empty");
+
+        if (emptyProp) {
+            emptyProp.innerHTML = "姓名不能为空";
+//            emptyProp.setAttribute("class", "redprop");
+//            content.style.border="2px solid red"
+        } else {
+
+        }
+    })
+    addHandle(content, 'blur', function () {
+        var emptyProp = document.querySelector(".empty");
+
+        if (emptyProp) {
+            emptyProp.innerHTML = "必填写，长度为4-16个字符";
+//            content.style.border="2px solid  rgb(46, 109, 166)"
+        } else {
+
+        }
+    })
+    checkout();
+
+</script>
+</body>
+</html>
