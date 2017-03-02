@@ -17,8 +17,7 @@
         }
 
         .content_num {
-            width: 40px;
-            height: 40px;
+           padding:10px;
             line-height: 40px;
             background-color: red;
             color: #fff;
@@ -40,76 +39,151 @@
     <button id="left_out">左侧出</button>
     <button id="right_out">右侧出</button>
     <div id="arrNums">
-        <!--<div class="content_num">10</div>-->
-        <!--<div class="content_num">3</div>-->
-        <!--<div class="content_num">7</div>-->
-        <!--<div class="content_num">12</div>-->
-        <!--<div class="content_num">11</div>-->
-        <!--<div class="content_num">30</div>-->
-        <!--<div class="content_num">10</div>-->
-        <!--<div class="content_num">3</div>-->
+
     </div>
 </div>
 <script type="application/javascript">
     //    获取到input中的内容
-    var numArr = [12, 2, 121231, 45, 345, 62, 5, 23];
+    //兼容监听事件
+    function addHandle(ele, event, fn) {
+        if (ele.addEventListener) {
+            ele.addEventListener(event, fn, false)
+        } else if (ele.attachEvent) {
+            ele.attachEvent('on' + event, fn)
+        }
+    }
+    var numArr = [];
 
 
     function inNum() {
         var int = document.querySelector("#num_in").value;
+
         return int;
     }
+    var leftin = document.querySelector("#left_in");
+    var leftout = document.querySelector("#left_out");
+    var rightin = document.querySelector("#right-in");
+    var rightout = document.querySelector("#right_out");
+    addHandle(leftin, 'click', function () {
+        //加正则表达式验证智能输入数字
+        var int = document.querySelector("#num_in").value;
 
-    document.querySelector("#left_in").addEventListener("click", function () {
-        numArr.unshift(inNum());
-        console.log(numArr);
-        arrNums.innerHTML=""
-        render(numArr);
+        (/^[0-9]+$/).test(int) ? queue.leftin(int) : alert("请输入数字");
     })
+    addHandle(rightin, 'click', function () {
+        //加正则表达式验证智能输入数字
+        var int = document.querySelector("#num_in").value;
 
-    document.querySelector("#left_out").addEventListener("click", function () {
-
-        alert(numArr.shift(inNum()))
-        console.log(numArr)
-        arrNums.innerHTML=""
-        render(numArr);
-
+        (/^[0-9]+$/).test(int) ? queue.rightin(int) : alert("请输入数字");
     })
-    document.querySelector("#right-in").addEventListener("click", function () {
-        numArr.push(inNum());
-        arrNums.innerHTML=""
-        render(numArr);
-
+    addHandle(rightout, 'click', function () {
+        queue.rightout()
     })
-    document.querySelector("#right_out").addEventListener("click", function () {
-        alert(numArr.pop(inNum()))
-        console.log(numArr);
-        arrNums.innerHTML=""
-        render(numArr);
+    addHandle(leftout, 'click', function () {
+        queue.leftout();
     })
-    console.log(numArr)
-    inNum()
+    //    document.querySelector("#left_in").addEventListener("click", function () {
+    //        numArr.unshift(inNum());
+    //        console.log(numArr);
+    //        arrNums.innerHTML = ""
+    //        render(numArr);
+    //    })
+    //
+    //    document.querySelector("#left_out").addEventListener("click", function () {
+    //
+    //        alert(numArr.shift(inNum()))
+    //        console.log(numArr)
+    //        arrNums.innerHTML = ""
+    //        render(numArr);
+    //
+    //    })
+    //    document.querySelector("#right-in").addEventListener("click", function () {
+    //        numArr.push(inNum());
+    //        arrNums.innerHTML = ""
+    //        render(numArr);
+    //
+    //    })
+    //    document.querySelector("#right_out").addEventListener("click", function () {
+    //        alert(numArr.pop(inNum()))
+    //        console.log(numArr);
+    //        arrNums.innerHTML = ""
+    //        render(numArr);
+    //    })
+    //    console.log(numArr)
+    var queue = {
+        leftin: function () {
 
-    //渲染队列
-    var arrNums = document.querySelector("#arrNums");
+            numArr.unshift(inNum());
+            console.log(numArr);
+            arrNums.innerHTML = ""
+            this.render(numArr);
+            this.clear();
+        },
+        leftout: function () {
+            if (numArr.length != 0) {
+                alert(numArr.shift(inNum()))
+                console.log(numArr)
+                arrNums.innerHTML = ""
+                this.render(numArr);
+            } else {
+                alert('数组以为空不能再清除')
+            }
 
-    function render(data) {
-        var content_num = document.querySelectorAll("#arrNums .content_num");
-        for (var i = 0; i < data.length; i++) {
+        },
+        rightin: function () {
+            numArr.push(inNum());
+            arrNums.innerHTML = ""
+            this.render(numArr);
+            this.clear();
+        },
+        rightout: function () {
+            if (numArr.length != 0) {
+                alert(numArr.pop(inNum()))
+                console.log(numArr);
+                arrNums.innerHTML = ""
+                this.render(numArr);
+            } else {
+                alert('数组以为空不能再清除')
+            }
+
+        },
+        render: function (data) {
+            var content_num = document.querySelectorAll("#arrNums .content_num");
+            for (var i = 0; i < data.length; i++) {
                 arrNum = document.createElement("div");
                 arrNum = document.createElement("div");
                 arrNum.setAttribute("class", "content_num");
                 arrNum.innerHTML = data[i];
                 arrNums.appendChild(arrNum);
 
+            }
+        },
+        clear:function(){
+            var int = document.querySelector("#num_in");
+            int.value="";
         }
+    }
+    //渲染队列
+    var arrNums = document.querySelector("#arrNums");
+
+    //    function render(data) {
+    //        var content_num = document.querySelectorAll("#arrNums .content_num");
+    //        for (var i = 0; i < data.length; i++) {
+    //            arrNum = document.createElement("div");
+    //            arrNum = document.createElement("div");
+    //            arrNum.setAttribute("class", "content_num");
+    //            arrNum.innerHTML = data[i];
+    //            arrNums.appendChild(arrNum);
+    //
+    //        }
+    //
+    //    }
+    init(numArr);
+    function init(data) {
+        inNum();
+        queue.render(data);
 
     }
-        init(numArr);
-        function init(data) {
-            render(data);
-
-        }
 </script>
 </body>
 </html>
