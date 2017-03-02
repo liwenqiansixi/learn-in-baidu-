@@ -10,14 +10,12 @@
         }
 
         .content {
-
             width: 1000px;
-            height: 500px;
             margin: 20px auto;
         }
 
         .content_num {
-           padding:10px;
+            padding: 5px 10px;
             line-height: 40px;
             background-color: red;
             color: #fff;
@@ -25,26 +23,43 @@
             display: inline-block;
             text-align: center;
         }
+
+        .chart {
+            display: inline-block;
+            width: 30px;
+            background-color: rebeccapurple;
+            margin: 10px;
+            position: relative;
+        }
+        .chart .sub{
+            position: absolute;
+            top:-20px;
+        }
     </style>
 </head>
 <body>
-<!--点击"左侧入"，将input中输入的数字从左侧插入队列中；-->
-<!--点击"右侧入"，将input中输入的数字从右侧插入队列中；-->
-<!--点击"左侧出"，读取并删除队列左侧第一个元素，并弹窗显示元素中数值；-->
-<!--点击"右侧出"，读取并删除队列又侧第一个元素，并弹窗显示元素中数值-->
+
 <div class="content">
     <input type="text" id="num_in">
     <button id="left_in">左侧入</button>
     <button id="right-in">右侧入</button>
     <button id="left_out">左侧出</button>
     <button id="right_out">右侧出</button>
+    <button id="taxis">排序</button>
     <div id="arrNums">
 
     </div>
 </div>
+<div class="charts">
+    <!--<div class="histogram"></div>-->
+</div>
+<!--限制输入的数字在10-100-->
+<!--队列元素数量最多限制为60个,当超过60个时,添加元素时alert出提示-->
+<!--队列展现方式变化如图,直接用高度表示数字大小-->
+<!--实现一个简单的排序功能,如冒泡排序（不限制具体算法）,用可视化的方法表达出来,参考见下方参考资料-->
 <script type="application/javascript">
     //    获取到input中的内容
-    //兼容监听事件
+    //兼容监听事件 d
     function addHandle(ele, event, fn) {
         if (ele.addEventListener) {
             ele.addEventListener(event, fn, false)
@@ -52,7 +67,7 @@
             ele.attachEvent('on' + event, fn)
         }
     }
-    var numArr = [];
+    var numArr = [10, 32, 12, 33, 47, 17];
 
 
     function inNum() {
@@ -64,6 +79,8 @@
     var leftout = document.querySelector("#left_out");
     var rightin = document.querySelector("#right-in");
     var rightout = document.querySelector("#right_out");
+    var taxis=document.querySelector("#taxis");
+    var charts = document.querySelectorAll(".charts")[0];
     addHandle(leftin, 'click', function () {
         //加正则表达式验证智能输入数字
         var int = document.querySelector("#num_in").value;
@@ -82,14 +99,17 @@
     addHandle(leftout, 'click', function () {
         queue.leftout();
     })
-
+    addHandle(taxis,'click',function(){
+        queue.taxis(numArr);
+    });
     var queue = {
         leftin: function () {
-
             numArr.unshift(inNum());
             console.log(numArr);
             arrNums.innerHTML = ""
             this.render(numArr);
+            charts.innerHTML = "";
+            this.renderchat(numArr);
             this.clear();
         },
         leftout: function () {
@@ -98,6 +118,8 @@
                 console.log(numArr)
                 arrNums.innerHTML = ""
                 this.render(numArr);
+                charts.innerHTML = "";
+                this.renderchat(numArr);
             } else {
                 alert('数组以为空不能再清除')
             }
@@ -107,14 +129,18 @@
             numArr.push(inNum());
             arrNums.innerHTML = ""
             this.render(numArr);
+            charts.innerHTML = "";
+            this.renderchat(numArr);
             this.clear();
         },
         rightout: function () {
             if (numArr.length != 0) {
-                alert(numArr.pop(inNum()))
+                alert(numArr.pop(inNum()));
                 console.log(numArr);
-                arrNums.innerHTML = ""
+                arrNums.innerHTML = "";
                 this.render(numArr);
+                charts.innerHTML = "";
+                this.renderchat(numArr);
             } else {
                 alert('数组以为空不能再清除')
             }
@@ -124,38 +150,60 @@
             var content_num = document.querySelectorAll("#arrNums .content_num");
             for (var i = 0; i < data.length; i++) {
                 arrNum = document.createElement("div");
-                arrNum = document.createElement("div");
                 arrNum.setAttribute("class", "content_num");
                 arrNum.innerHTML = data[i];
                 arrNums.appendChild(arrNum);
 
             }
         },
-        clear:function(){
+        clear: function () {
             var int = document.querySelector("#num_in");
-            int.value="";
+            int.value = "";
+        },
+        renderchat: function (data) {
+            for (var i = 0; i < data.length; i++) {
+                chart = document.createElement("div");
+                chart.setAttribute("class", "chart");
+                sub_chart=document.createElement("div");
+                sub_chart.innerHTML=data[i];
+                sub_chart.setAttribute("class","sub")
+                chart.appendChild(sub_chart);
+                chart.style.height = data[i] + "px";
+                charts.appendChild(chart);
+            }
+        },
+        taxis:function(data){
+            var _this=this;
+            for(var i=0;i<data.length;i++){
+                for(var j=i;j<data.length;j++){
+                    if(data[j]>data[j+1]){
+                        var tmp=data[j];
+                        data[j]=data[j+1];
+                        data[j+1]=tmp;
+
+                    }
+                }
+                arrNums.innerHTML = "";
+                _this.render(data);
+                charts.innerHTML = "";
+                this.renderchat(numArr);
+
+            }
+
+            return data;
         }
     }
     //渲染队列
     var arrNums = document.querySelector("#arrNums");
 
-    //    function render(data) {
-    //        var content_num = document.querySelectorAll("#arrNums .content_num");
-    //        for (var i = 0; i < data.length; i++) {
-    //            arrNum = document.createElement("div");
-    //            arrNum = document.createElement("div");
-    //            arrNum.setAttribute("class", "content_num");
-    //            arrNum.innerHTML = data[i];
-    //            arrNums.appendChild(arrNum);
-    //
-    //        }
-    //
-    //    }
+    if (numArr.length >= 60) {
+        alert("元素数量最多限制为60个")
+    }
     init(numArr);
     function init(data) {
         inNum();
         queue.render(data);
-
+        queue.renderchat(data);
     }
 </script>
 </body>
