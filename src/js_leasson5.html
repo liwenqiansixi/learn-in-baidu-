@@ -31,9 +31,10 @@
             margin: 10px;
             position: relative;
         }
-        .chart .sub{
+
+        .chart .sub {
             position: absolute;
-            top:-20px;
+            top: -20px;
         }
     </style>
 </head>
@@ -67,7 +68,7 @@
             ele.attachEvent('on' + event, fn)
         }
     }
-    var numArr = [10, 32, 12, 33, 47, 17];
+    var numArr = [];
 
 
     function inNum() {
@@ -79,19 +80,18 @@
     var leftout = document.querySelector("#left_out");
     var rightin = document.querySelector("#right-in");
     var rightout = document.querySelector("#right_out");
-    var taxis=document.querySelector("#taxis");
+    var taxis = document.querySelector("#taxis");
     var charts = document.querySelectorAll(".charts")[0];
     addHandle(leftin, 'click', function () {
         //加正则表达式验证智能输入数字
-        var int = document.querySelector("#num_in").value;
 
-        (/^[0-9]+$/).test(int) ? queue.leftin(int) : alert("请输入数字");
+        queue.leftin();
     })
     addHandle(rightin, 'click', function () {
         //加正则表达式验证智能输入数字
-        var int = document.querySelector("#num_in").value;
+        queue.rightin()
 
-        (/^[0-9]+$/).test(int) ? queue.rightin(int) : alert("请输入数字");
+
     })
     addHandle(rightout, 'click', function () {
         queue.rightout()
@@ -99,87 +99,100 @@
     addHandle(leftout, 'click', function () {
         queue.leftout();
     })
-    addHandle(taxis,'click',function(){
+    addHandle(taxis, 'click', function () {
         queue.taxis(numArr);
     });
     var queue = {
         leftin: function () {
-            numArr.unshift(inNum());
-            console.log(numArr);
-            arrNums.innerHTML = ""
-            this.render(numArr);
-            charts.innerHTML = "";
-            this.renderchat(numArr);
-            this.clear();
-        },
-        leftout: function () {
-            if (numArr.length != 0) {
-                alert(numArr.shift(inNum()))
-                console.log(numArr)
+            if (this.checkout(numArr)) {
+                numArr.unshift(inNum());
+                console.log(numArr);
                 arrNums.innerHTML = ""
                 this.render(numArr);
                 charts.innerHTML = "";
                 this.renderchat(numArr);
-            } else {
-                alert('数组以为空不能再清除')
+                this.clear();
             }
 
+
+        },
+        leftout: function () {
+            if (this.checkout(numArr)) {
+                if (numArr.length != 0) {
+                    alert(numArr.shift(inNum()))
+                    console.log(numArr);
+                    arrNums.innerHTML = ""
+                    this.render(numArr);
+                    charts.innerHTML = "";
+                    this.renderchat(numArr);
+                } else {
+                    alert('数组以为空不能再清除')
+                }
+            }
         },
         rightin: function () {
-            numArr.push(inNum());
-            arrNums.innerHTML = ""
-            this.render(numArr);
-            charts.innerHTML = "";
-            this.renderchat(numArr);
-            this.clear();
-        },
-        rightout: function () {
-            if (numArr.length != 0) {
-                alert(numArr.pop(inNum()));
-                console.log(numArr);
-                arrNums.innerHTML = "";
+            if (this.checkout(numArr)) {
+                numArr.push(inNum());
+                arrNums.innerHTML = ""
                 this.render(numArr);
                 charts.innerHTML = "";
                 this.renderchat(numArr);
-            } else {
-                alert('数组以为空不能再清除')
+                this.clear();
             }
-
+        },
+        rightout: function () {
+            if (this.checkout(numArr)) {
+                if (numArr.length != 0) {
+                    alert(numArr.pop(inNum()));
+                    console.log(numArr);
+                    arrNums.innerHTML = "";
+                    this.render(numArr);
+                    charts.innerHTML = "";
+                    this.renderchat(numArr);
+                } else {
+                    alert('数组以为空不能再清除')
+                }
+            }
         },
         render: function (data) {
+
             var content_num = document.querySelectorAll("#arrNums .content_num");
             for (var i = 0; i < data.length; i++) {
                 arrNum = document.createElement("div");
                 arrNum.setAttribute("class", "content_num");
                 arrNum.innerHTML = data[i];
                 arrNums.appendChild(arrNum);
-
             }
+
         },
         clear: function () {
             var int = document.querySelector("#num_in");
             int.value = "";
         },
         renderchat: function (data) {
+
+
             for (var i = 0; i < data.length; i++) {
                 chart = document.createElement("div");
                 chart.setAttribute("class", "chart");
-                sub_chart=document.createElement("div");
-                sub_chart.innerHTML=data[i];
-                sub_chart.setAttribute("class","sub")
+                sub_chart = document.createElement("div");
+                sub_chart.innerHTML = data[i];
+                sub_chart.setAttribute("class", "sub")
                 chart.appendChild(sub_chart);
                 chart.style.height = data[i] + "px";
                 charts.appendChild(chart);
             }
+
+
         },
-        taxis:function(data){
-            var _this=this;
-            for(var i=0;i<data.length;i++){
-                for(var j=i;j<data.length;j++){
-                    if(data[j]>data[j+1]){
-                        var tmp=data[j];
-                        data[j]=data[j+1];
-                        data[j+1]=tmp;
+        taxis: function (data) {
+            var _this = this;
+            for (var i = 0; i < data.length; i++) {
+                for (var j = i; j < data.length; j++) {
+                    if (data[j] > data[j + 1]) {
+                        var tmp = data[j];
+                        data[j] = data[j + 1];
+                        data[j + 1] = tmp;
 
                     }
                 }
@@ -189,16 +202,29 @@
                 this.renderchat(numArr);
 
             }
-
             return data;
+        },
+        checkout: function (data) {
+            if (data.length >= 60) {
+                alert('超出范围，元素数量最多限制为60个');
+                return false;
+            } else {
+                var int = document.querySelector("#num_in").value;
+                if (int == 0 || int < 10 || int > 100) {
+                    alert('请输入10-100数字');
+                    return false;
+                }
+                if ((/^[0-9]+$/).test(int)) {
+                    return true;
+                }
+            }
+
         }
     }
     //渲染队列
     var arrNums = document.querySelector("#arrNums");
 
-    if (numArr.length >= 60) {
-        alert("元素数量最多限制为60个")
-    }
+
     init(numArr);
     function init(data) {
         inNum();
