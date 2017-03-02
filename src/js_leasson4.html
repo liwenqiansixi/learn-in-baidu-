@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .content {
+
+            width: 1000px;
+            height: 500px;
+            margin: 20px auto;
+        }
+
+        .content_num {
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            background-color: red;
+            color: #fff;
+            margin: 10px;
+            display: inline-block;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<!--点击"左侧入"，将input中输入的数字从左侧插入队列中；-->
+<!--点击"右侧入"，将input中输入的数字从右侧插入队列中；-->
+<!--点击"左侧出"，读取并删除队列左侧第一个元素，并弹窗显示元素中数值；-->
+<!--点击"右侧出"，读取并删除队列又侧第一个元素，并弹窗显示元素中数值-->
+<div class="content">
+    <input type="text" id="num_in">
+    <button id="left_in">左侧入</button>
+    <button id="right-in">右侧入</button>
+    <button id="left_out">左侧出</button>
+    <button id="right_out">右侧出</button>
+    <div id="arrNums">
+        <!--<div class="content_num">10</div>-->
+        <!--<div class="content_num">3</div>-->
+        <!--<div class="content_num">7</div>-->
+        <!--<div class="content_num">12</div>-->
+        <!--<div class="content_num">11</div>-->
+        <!--<div class="content_num">30</div>-->
+        <!--<div class="content_num">10</div>-->
+        <!--<div class="content_num">3</div>-->
+    </div>
+</div>
+<script type="application/javascript">
+    //    获取到input中的内容
+    var numArr = [12, 2, 121231, 45, 345, 62, 5, 23];
+
+
+    function inNum() {
+        var int = document.querySelector("#num_in").value;
+        return int;
+    }
+
+    document.querySelector("#left_in").addEventListener("click", function () {
+        numArr.unshift(inNum());
+        console.log(numArr);
+        arrNums.innerHTML=""
+        render(numArr);
+    })
+
+    document.querySelector("#left_out").addEventListener("click", function () {
+
+        alert(numArr.shift(inNum()))
+        console.log(numArr)
+        arrNums.innerHTML=""
+        render(numArr);
+
+    })
+    document.querySelector("#right-in").addEventListener("click", function () {
+        numArr.push(inNum());
+        arrNums.innerHTML=""
+        render(numArr);
+
+    })
+    document.querySelector("#right_out").addEventListener("click", function () {
+        alert(numArr.pop(inNum()))
+        console.log(numArr);
+        arrNums.innerHTML=""
+        render(numArr);
+    })
+    console.log(numArr)
+    inNum()
+
+    //渲染队列
+    var arrNums = document.querySelector("#arrNums");
+
+    function render(data) {
+        var content_num = document.querySelectorAll("#arrNums .content_num");
+        for (var i = 0; i < data.length; i++) {
+                arrNum = document.createElement("div");
+                arrNum = document.createElement("div");
+                arrNum.setAttribute("class", "content_num");
+                arrNum.innerHTML = data[i];
+                arrNums.appendChild(arrNum);
+
+        }
+
+    }
+        init(numArr);
+        function init(data) {
+            render(data);
+
+        }
+</script>
+</body>
+</html>
