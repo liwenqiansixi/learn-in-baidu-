@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .content {
+            width: 1000px;
+            margin: 20px auto;
+        }
+
+        .content_num {
+            padding: 5px 10px;
+            line-height: 40px;
+            background-color: red;
+            color: #fff;
+            margin: 10px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .chart {
+            display: inline-block;
+            width: 30px;
+            background-color: rebeccapurple;
+            margin: 10px;
+            position: relative;
+        }
+
+        .chart .sub {
+            position: absolute;
+            top: -20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="content">
+    <textarea name="" id="" cols="40" rows="10"></textarea>
+    <button id="left_in">左侧入</button>
+    <button id="right-in">右侧入</button>
+    <button id="left_out">左侧出</button>
+    <button id="right_out">右侧出</button>
+    <div>
+        <input type="text">
+        <button>查询</button>
+    </div>
+
+    <!--查询词在各个元素内容中做模糊匹配-->
+
+    <div id="arrNums">
+
+    </div>
+</div>
+<div class="charts">
+    <!--<div class="histogram"></div>-->
+</div>
+<!--将新元素输入框从input改为textarea-->
+<!--允许一次批量输入多个内容，格式可以为数字、中文、英文等，可以通过用回车，逗号（全角半角均可），顿号，空格（全角半角、Tab等均可）等符号作为不同内容的间隔-->
+<!--增加一个查询文本输入框，和一个查询按钮，当点击查询时，将查询词在各个元素内容中做模糊匹配，将匹配到的内容进行特殊标识，如文字颜色等。举例，内容中有abcd，查询词为ab或bc，则该内容需要标识-->
+<script type="application/javascript">
+    //    获取到input中的内容
+    //兼容监听事件 d
+    function addHandle(ele, event, fn) {
+        if (ele.addEventListener) {
+            ele.addEventListener(event, fn, false)
+        } else if (ele.attachEvent) {
+            ele.attachEvent('on' + event, fn)
+        }
+    }
+    var
+
+    addHandle(leftin, 'click', function () {
+        //加正则表达式验证智能输入数字
+
+        queue.leftin();
+    })
+
+</script>
+</body>
+</html>
