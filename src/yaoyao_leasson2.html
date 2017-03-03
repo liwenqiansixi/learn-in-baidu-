@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>表单（二）多个表单项的动态校验</title>
+    <style>
+        html, body, form, span, button {
+            margin: 0;
+            padding: 0;
+        }
+
+        .content {
+
+            margin: 0 auto;
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        input {
+            width: 200px;
+            height: 30px;
+            border-radius: 0.3em;
+            outline-color: royalblue;
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+            font-size: 18px;
+            border: 2px solid rgb(204, 204, 204);
+            padding-left: 15px;
+        }
+
+        #submit {
+            border-radius: 0.3em;
+            width: 80px;
+            height: 35px;
+            border: 1px solid rgb(46, 109, 166);
+            color: #fffffb;
+            background: rgb(52, 122, 183);
+            position: relative;
+            left: 50%;
+
+            transform: translate(-50%);
+
+        }
+
+        .empty {
+            color: rgb(204, 204, 204)
+        }
+
+        .item {
+            display: inline-block;
+            width: 100px;
+            text-align: right;
+        }
+
+        .redprop {
+            color: red;
+        }
+
+        .redborder {
+            border: 2px solid red;
+        }
+
+        .greenborder {
+            border: 2px solid green;
+        }
+
+        .greenprop {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+<form class="content">
+    <span class="item">名称：</span><input id="content" type="text">
+    <p class="props">
+        <span class="empty" id="empty"></span>
+    </p>
+    <span class="item">密码：</span><input id="password" type="password">
+    <p class="props">
+        <span class="empty"></span>
+    </p>
+    <span class="item">密码确认：</span><input id="psw_confied" type="password">
+    <p class="props">
+        <span class="empty"></span>
+    </p>
+    <span class="item">邮箱：</span><input id="eamil" type="email">
+    <p class="props">
+        <span class="empty"></span>
+    </p>
+    <span class="item">手机：</span><input id="phone" type="tel">
+    <p class="props">
+        <span class="empty"></span>
+    </p>
+</form>
+<button class="submit" id="submit">提交</button>
+
+</body>
+<script>
+    function addHandle(ele, event, fn) {
+        if (ele.addEventListener) {
+            ele.addEventListener(event, fn, false);
+        } else if (ele.attachEvent) {
+            ele.attachEvent(on + "event", fn)
+        }
+    }
+    var inputs = document.querySelectorAll("input");
+    var empty = document.querySelectorAll(".props span");
+    var submit = document.querySelector("#submit");
+    console.log(empty);
+    var tipProp = ["必填，长度为4～16个z字符", "请设置密码", "再次输入相同的密码", "邮箱格式xxxxx.@xx..com", "请输入手机号"];
+    var emptyProp = ["名称不能为空", "密码不能为空", "重新确认密码不能为空", "邮箱不能为空", "手机号不能为空"];
+    var errorProp = ["", "密码长度不能小于6个字符", "密码错误，请重新确认密码", "请输入正确的邮箱格式", "请输入正确的手机号格式"];
+    var successProp = ["该名称可用", "密码可用", "重新确认密码可用", "邮箱验证可用", "手机号验证可用"];
+    var type;
+    for (var i = 0; i < inputs.length; i++) {
+        console.log(empty[i]);
+        (function (i) {
+            addHandle(inputs[i], 'focus', function () {
+                empty[i].style.display = "block";
+                empty[i].innerHTML = tipProp[i];
+                empty[i].setAttribute("class", " empty");
+                inputs[i].setAttribute("class", "");
+            });
+            addHandle(inputs[i], 'blur', function () {
+                switch (i) {
+                    case 0:
+                        blur.nameblur(0);
+                        break;
+                    case 1:
+                        blur.passwordblur(1);
+                        break;
+                    case 2:
+                        blur.repasswordblur(2);
+                        break;
+                    case 3:
+                        blur.emailblur(3);
+                        break;
+                    case 4:
+                        blur.telblur(4);
+                        break;
+                }
+            });
+
+        })(i)
+
+    }
+    addHandle(submit, "click", function () {
+        blur.allsubmit();
+    });
+    var blur = {
+        nameblur: function (i) {
+            if (inputs[i].value.length == 0) {
+                empty[i].innerHTML = "名称不能为空";
+                cansubmit = false;
+                type = '姓名';
+                empty[i].setAttribute("class", " empty redprop");
+                inputs[i].setAttribute("class", "redborder");
+            } else {
+                empty[i].innerHTML = "该名称可用";
+                cansubmit = true;
+                empty[i].setAttribute("class", " empty greenprop ");
+                inputs[i].setAttribute("class", "greenborder");
+            }
+        },
+        passwordblur: function (i) {
+            if (inputs[i].value.length == 0) {
+                empty[i].innerHTML = "密码不能为空";
+                cansubmit = false;
+                type = '密码';
+                empty[i].setAttribute("class", " empty redprop");
+                inputs[i].setAttribute("class", "redborder");
+            } else if (inputs[i].value.length < 6) {
+                empty[i].innerHTML = "密码长度不能小于6个字符";
+                cansubmit = false;
+                empty[i].setAttribute("class", " empty redprop");
+                inputs[i].setAttribute("class", "redborder");
+            } else {
+                empty[i].innerHTML = "密码可用";
+                cansubmit = true;
+                empty[i].setAttribute("class", " empty greenprop ");
+                inputs[i].setAttribute("class", "greenborder");
+            }
+        },
+        repasswordblur: function (i) {
+            if (inputs[i].value.length == 0) {
+                empty[i].innerHTML = "重新确认密码不能为空";
+                cansubmit = false;
+                type = '重复密码';
+                empty[i].setAttribute("class", " empty redprop");
+                inputs[i].setAttribute("class", "redborder");
+            } else if (inputs[i].value.length >= 6) {
+                if (inputs[i].value == inputs[1].value) {
+                    empty[i].innerHTML = "重新确认密码可用";
+                    cansubmit = true;
+                    empty[i].setAttribute("class", " empty greenprop ");
+                    inputs[i].setAttribute("class", "greenborder");
+                } else {
+                    empty[i].innerHTML = "密码错误，请重新确认密码";
+                    cansubmit = false;
+                    empty[i].setAttribute("class", " empty redprop");
+                    inputs[i].setAttribute("class", "redborder");
+                }
+            } else {
+                empty[i].innerHTML = "密码长度不能小于6个字符"
+                empty[i].setAttribute("class", " empty redprop");
+                inputs[i].setAttribute("class", "redborder");
+            }
+        },
+        emailblur: function (i) {
+            if (inputs[i].value.length == 0) {
+                empty[i].innerHTML = "邮箱不能为空";
+                empty[i].setAttribute("class", " empty redprop");
+                inputs[i].setAttribute("class", "redborder");
+            } else {
+                if ((/\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/).test(inputs[i].value)) {
+                    empty[i].innerHTML = "邮箱验证可用";
+                    cansubmit = true;
+                    empty[i].setAttribute("class", " empty greenprop ");
+                    inputs[i].setAttribute("class", "greenborder");
+                } else {
+                    empty[i].innerHTML = "请输入正确的邮箱格式";
+                    cansubmit = false;
+                    type = '邮箱';
+                    empty[i].setAttribute("class", " empty redprop");
+                    inputs[i].setAttribute("class", "redborder");
+                }
+            }
+
+        },
+        telblur: function (i) {
+            if (inputs[i].value.length == 0) {
+                empty[i].innerHTML = "手机号不能为空";
+                cansubmit = false;
+
+                empty[i].setAttribute("class", " empty redprop");
+                inputs[i].setAttribute("class", "redborder");
+            } else {
+                if ((/0?(13|14|15|18)[0-9]{9}/).test(inputs[i].value)) {
+                    empty[i].innerHTML = "手机号验证可用";
+                    cansubmit = true;
+                    empty[i].setAttribute("class", " empty greenprop ");
+                    inputs[i].setAttribute("class", "greenborder");
+                } else {
+                    empty[i].innerHTML = "请输入正确的手机号格式"
+                    cansubmit = false;
+                    type = '手机号';
+                    empty[i].setAttribute("class", " empty redprop");
+                    inputs[i].setAttribute("class", "redborder");
+                }
+            }
+
+        },
+        allsubmit: function () {
+            this.nameblur(0);
+            this.passwordblur(1);
+            this.repasswordblur(2);
+            this.emailblur(3);
+            this.telblur(4);
+            if (!cansubmit) {
+                alert( '输入有误');
+            } else {
+                alert('success')
+            }
+        }
+    }
+
+    //    var cansubmit=false;
+    //    addHandle(inputs[0], 'focus', function () {
+    //        empty[0].style.display = "block";
+    //        empty[0].innerHTML = "必填，长度为4～16个字符"
+    //        empty[0].setAttribute("class"," empty");
+    //        inputs[0].setAttribute("class","");
+    //    });
+    //    addHandle(inputs[1], 'focus', function () {
+    //        empty[1].style.display = "block";
+    //        empty[1].innerHTML = "请设置密码"
+    //        empty[1].setAttribute("class"," empty");
+    //        inputs[1].setAttribute("class","");
+    //    });
+    //    addHandle(inputs[2], 'focus', function () {
+    //        empty[2].style.display = "block";
+    //        empty[2].innerHTML = "再次输入相同的密码"
+    //        empty[2].setAttribute("class"," empty");
+    //        inputs[2].setAttribute("class","");
+    //    });
+    //    addHandle(inputs[3], 'focus', function () {
+    //        empty[3].style.display = "block";
+    //        empty[3].innerHTML = "邮箱格式xxxxx.@xx..com"
+    //        empty[3].setAttribute("class"," empty");
+    //        inputs[3].setAttribute("class","");
+    //    });
+    //    addHandle(inputs[4], 'focus', function () {
+    //        empty[4].style.display = "block";
+    //        empty[4].innerHTML = "请输入手机号"
+    //        empty[4].setAttribute("class"," empty");
+    //        inputs[4].setAttribute("class","");
+    //    });
+    //
+    //    addHandle(inputs[0], 'blur', function () {
+    //        empty[0].style.display = "block";
+    //        empty[1].style.display = "block";
+    //        empty[2].style.display = "block";
+    //        empty[3].style.display = "block";
+    //        empty[4].style.display = "block";
+    //        if(inputs[0].value.length == 0){
+    //            empty[0].innerHTML = "名称不能为空";
+    //            cansubmit=false;
+    //            empty[0].setAttribute("class"," empty redprop");
+    //            inputs[0].setAttribute("class","redborder");
+    //        }else{
+    //            empty[0].innerHTML = "该名称可用";
+    //            cansubmit=true;
+    //            empty[0].setAttribute("class"," empty greenprop ");
+    //            inputs[0].setAttribute("class","greenborder");
+    //        }
+    //    });
+    //    addHandle(inputs[1], 'blur', function () {
+    //        if (inputs[1].value.length == 0) {
+    //            empty[1].innerHTML = "密码不能为空";
+    //            cansubmit=false;
+    //            empty[1].setAttribute("class"," empty redprop");
+    //            inputs[1].setAttribute("class","redborder");
+    //        } else if (inputs[1].value.length < 6) {
+    //            empty[1].innerHTML = "密码长度不能小于6个字符";
+    //            cansubmit=false;
+    //            empty[1].setAttribute("class"," empty redprop");
+    //            inputs[1].setAttribute("class","redborder");
+    //        }else{
+    //                empty[1].innerHTML = "密码可用";
+    //            cansubmit=true;
+    //                empty[1].setAttribute("class"," empty greenprop ");
+    //                inputs[1].setAttribute("class","greenborder");
+    //        }
+    //    });
+    //
+    //    addHandle(inputs[2], 'blur', function () {
+    //        if(inputs[2].value.length==0){
+    //            empty[2].innerHTML = "重新确认密码不能为空";
+    //            cansubmit=false;
+    //            empty[2].setAttribute("class"," empty redprop");
+    //            inputs[2].setAttribute("class","redborder");
+    //        }else if(inputs[2].value.length>=6){
+    //            if(inputs[2].value==inputs[1].value){
+    //                empty[2].innerHTML = "重新确认密码可用";
+    //                cansubmit=true;
+    //                empty[2].setAttribute("class"," empty greenprop ");
+    //                inputs[2].setAttribute("class","greenborder");
+    //            }else{
+    //                empty[2].innerHTML = "密码错误，请重新确认密码";
+    //                cansubmit=false;
+    //                empty[2].setAttribute("class"," empty redprop");
+    //                inputs[2].setAttribute("class","redborder");
+    //            }
+    //        }else{
+    //            empty[2].innerHTML = "密码长度不能小于6个字符"
+    //            empty[2].setAttribute("class"," empty redprop");
+    //            inputs[2].setAttribute("class","redborder");
+    //        }
+    //    });
+    //    addHandle(inputs[3], 'blur', function () {
+    //        if(inputs[3].value.length==0){
+    //            empty[3].innerHTML = "邮箱不能为空";
+    //            empty[3].setAttribute("class"," empty redprop");
+    //            inputs[3].setAttribute("class","redborder");
+    //        }else {
+    //            if((/\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/).test(inputs[3].value)){
+    //                empty[3].innerHTML = "邮箱验证可用";
+    //                cansubmit=true;
+    //                empty[3].setAttribute("class"," empty greenprop ");
+    //                inputs[3].setAttribute("class","greenborder");
+    //            }else{
+    //                empty[3].innerHTML = "请输入正确的邮箱格式"
+    //                empty[3].setAttribute("class"," empty redprop");
+    //                inputs[3].setAttribute("class","redborder");
+    //            }
+    //        }
+    //    });
+    //    addHandle(inputs[4], 'blur', function () {
+    //        if(inputs[4].value.length==0){
+    //            empty[4].innerHTML = "手机号不能为空";
+    //            cansubmit=false;
+    //            empty[4].setAttribute("class"," empty redprop");
+    //            inputs[4].setAttribute("class","redborder");
+    //        }else {
+    //            if(  (/0?(13|14|15|18)[0-9]{9}/).test(inputs[4].value)){
+    //                empty[4].innerHTML = "手机号验证可用";
+    //                cansubmit=true;
+    //                empty[4].setAttribute("class"," empty greenprop ");
+    //                inputs[4].setAttribute("class","greenborder");
+    //            }else{
+    //                empty[4].innerHTML = "请输入正确的手机号格式"
+    //                cansubmit=false;
+    //                empty[4].setAttribute("class"," empty redprop");
+    //                inputs[4].setAttribute("class","redborder");
+    //            }
+    //        }
+    //    });
+    //    addHandle(submit,"click",function(cansubmit){
+    //        if(inputs[0].value.length == 0){
+    //            empty[0].innerHTML = "名称不能为空";
+    //            cansubmit=false;
+    //            empty[0].setAttribute("class"," empty redprop");
+    //            inputs[0].setAttribute("class","redborder");
+    //        }else{
+    //            empty[0].innerHTML = "该名称可用";
+    //            cansubmit=true;
+    //            empty[0].setAttribute("class"," empty greenprop ");
+    //            inputs[0].setAttribute("class","greenborder");
+    //        }
+    //
+    //        if (inputs[1].value.length == 0) {
+    //            empty[1].innerHTML = "密码不能为空";
+    //            cansubmit=false;
+    //            empty[1].setAttribute("class"," empty redprop");
+    //            inputs[1].setAttribute("class","redborder");
+    //        } else if (inputs[1].value.length < 6) {
+    //            empty[1].innerHTML = "密码长度不能小于6个字符";
+    //            cansubmit=false;
+    //            empty[1].setAttribute("class"," empty redprop");
+    //            inputs[1].setAttribute("class","redborder");
+    //        }else{
+    //            empty[1].innerHTML = "密码可用";
+    //            cansubmit=true;
+    //            empty[1].setAttribute("class"," empty greenprop ");
+    //            inputs[1].setAttribute("class","greenborder");
+    //        }
+    //
+    //
+    //        if(inputs[2].value.length==0){
+    //            empty[2].innerHTML = "重新确认密码不能为空";
+    //            cansubmit=false;
+    //            empty[2].setAttribute("class"," empty redprop");
+    //            inputs[2].setAttribute("class","redborder");
+    //        }else if(inputs[2].value.length>=6){
+    //            if(inputs[2].value==inputs[1].value){
+    //                empty[2].innerHTML = "重新确认密码可用";
+    //                cansubmit=true;
+    //                empty[2].setAttribute("class"," empty greenprop ");
+    //                inputs[2].setAttribute("class","greenborder");
+    //            }else{
+    //                empty[2].innerHTML = "密码错误，请重新确认密码";
+    //                cansubmit=false;
+    //                empty[2].setAttribute("class"," empty redprop");
+    //                inputs[2].setAttribute("class","redborder");
+    //            }
+    //        }else{
+    //            empty[2].innerHTML = "密码长度不能小于6个字符"
+    //            empty[2].setAttribute("class"," empty redprop");
+    //            inputs[2].setAttribute("class","redborder");
+    //        }
+    //
+    //        if(inputs[3].value.length==0){
+    //            empty[3].innerHTML = "邮箱不能为空";
+    //            empty[3].setAttribute("class"," empty redprop");
+    //            inputs[3].setAttribute("class","redborder");
+    //        }else {
+    //            if((/\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/).test(inputs[3].value)){
+    //                empty[3].innerHTML = "邮箱验证可用";
+    //                cansubmit=true;
+    //                empty[3].setAttribute("class"," empty greenprop ");
+    //                inputs[3].setAttribute("class","greenborder");
+    //            }else{
+    //                empty[3].innerHTML = "请输入正确的邮箱格式";
+    //                empty[3].setAttribute("class"," empty redprop");
+    //                inputs[3].setAttribute("class","redborder");
+    //            }
+    //        }
+    //
+    //
+    //        if(  (/0?(13|14|15|18)[0-9]{9}/).test(inputs[4].value)){
+    //            empty[4].innerHTML = "手机号验证可用";
+    //            cansubmit=true;
+    //            empty[4].setAttribute("class"," empty greenprop ");
+    //            inputs[4].setAttribute("class","greenborder");
+    //        }else{
+    //            empty[4].innerHTML = "请输入正确的手机号格式";
+    //            cansubmit=false;
+    //            empty[4].setAttribute("class"," empty redprop");
+    //            inputs[4].setAttribute("class","redborder");
+    //        }
+    //        if(!cansubmit){
+    //            alert('输入有误');
+    //        }
+    //    })
+</script>
+</html>
