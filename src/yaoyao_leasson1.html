@@ -9,7 +9,7 @@
             padding: 0;
         }
 
-        form {
+        .content {
             width: 1000px;
             height: 400px;
             margin: 0 auto;
@@ -25,6 +25,7 @@
             text-align: center;
             text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
             font-size: 18px;
+            border: 2px solid rgb(204, 204, 204);
         }
 
         #checking {
@@ -44,27 +45,72 @@
         .redprop {
             color: red;
         }
+
+        .redborder {
+            border: 2px solid red;
+        }
+
+        .greenborder {
+            border: 2px solid green;
+        }
+
+        .greenprop {
+            color: green;
+        }
+
     </style>
 </head>
 <body>
-<form action="">
+<div class="content">
     <span>名称：</span><input id="content" type="text">
     <button id="checking">验证</button>
-    <p class="props"></p>
-
-</form>
+    <p class="props">
+        <span class="empty" id="empty">必填写，长度为4-16个字符</span>
+    </p>
+</div>
 <script type="application/javascript">
     var content = document.querySelector("#content");
     var checking = document.querySelector("#checking");
-    var props = document.querySelector(".props")
-    function checkout() {
-        if (content.value == '') {
-            var emptyProp = document.createElement("span");
-            emptyProp.setAttribute('class', 'empty');
-            emptyProp.innerHTML = "必填写，长度为4-16个字符";
-            props.appendChild(emptyProp);
+    var props = document.querySelector(".props");
+    var emptyProp = document.querySelector("#empty");
+
+    //如果内容不为空循环内容的值
+    var len = 0;//输入字符串的长度
+    //检查输入是中文还是英文
+    function strlen(str) {
+        for (var i = 0; i < str.length; i++) {
+            var codeval = str.charCodeAt(i);
+            if (codeval >= 0 && codeval <= 128) {
+                len++;
+            } else {
+                len += 2;
+            }
         }
     }
+
+
+    function checkout(len) {
+        //                1.字符数为4~16位
+//                2.每个英文字母、数字、英文符号长度为1
+//                3.每个汉字，中文符号长度为2
+        if (len == 0) {
+            emptyProp.innerHTML = "姓名不能为空";
+            emptyProp.setAttribute("class", "redprop");
+            content.setAttribute("class", "redborder");
+        }
+        else if (len >= 4 && len <= 16) {
+            emptyProp.innerHTML = "名称格式正确";
+            emptyProp.setAttribute("class", "greenprop");
+            content.setAttribute("class", "greenborder");
+        } else {
+
+            emptyProp.innerHTML = "不符合格式，长度为4-16个字符";
+            emptyProp.setAttribute("class", "redprop");
+            content.setAttribute("class", "redborder");
+        }
+
+    }
+
     function addHandle(ele, event, fn) {
         if (ele.addEventListener) {
             ele.addEventListener(event, fn, false);
@@ -72,30 +118,23 @@
             ele.attachEvent(on + "event", fn)
         }
     }
-    ;
+
 
     addHandle(content, 'focus', function () {
-        var emptyProp = document.querySelector(".empty");
-
-        if (emptyProp) {
-            emptyProp.innerHTML = "姓名不能为空";
-//            emptyProp.setAttribute("class", "redprop");
-//            content.style.border="2px solid red"
-        } else {
-
-        }
-    })
+    });
+    addHandle(checking, 'click', function () {
+        strlen(content.value);
+        console.log(len);
+        checkout(len);
+        len = 0;
+    });
     addHandle(content, 'blur', function () {
-        var emptyProp = document.querySelector(".empty");
 
-        if (emptyProp) {
-            emptyProp.innerHTML = "必填写，长度为4-16个字符";
-//            content.style.border="2px solid  rgb(46, 109, 166)"
-        } else {
+        emptyProp.innerHTML = "必填写，长度为4-16个字符";
+        emptyProp.setAttribute("class", "empty");
+        content.setAttribute("class", "");
 
-        }
     })
-    checkout();
 
 </script>
 </body>
