@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UI组件之浮出层</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <style>
+        html, body, h3, section, article, button, span {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            /*background-color: palevioletred;*/
+        }
+
+        .onpage {
+            height: 2000px;
+            background: beige;
+        }
+
+        .fc {
+            position: absolute;
+            width: 80%;
+            height: 25%;
+            border: 1px solid #333333;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            /*margin:0 auto;*/
+            /*margin-top:50%;*/
+        }
+
+        .shade {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, .6);
+        }
+
+        .fc {
+            display: none;
+            position: fixed;
+
+        }
+
+        .fc h3 {
+            background: pink;
+            text-align: center;
+        }
+
+        .confirm_btn {
+            position: absolute;
+            bottom: 0px;
+            right: 0px;
+            width: 100%;
+
+        }
+
+        .confirm_btn span {
+            /*display: inline-block;*/
+            float: left;
+            width: 50%;
+            height: 2.5em;
+            line-height: 2.5em;
+            border-top: 1px solid #333333;
+            text-align: center;
+            box-sizing: border-box;
+            background: palevioletred;
+            color: #fffffb;
+            cursor: pointer;
+            /*height: 50%;*/
+        }
+
+        .bl {
+            border-left: 1px solid #333333;
+        }
+
+        .conent {
+            text-align: center;
+        }
+
+        .hide {
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .onpage {
+            text-align: center;
+        }
+
+        #tanchu {
+            width: 8rem;
+            height: 1.5rem;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="onpage">
+    <button id="tanchu">弹出弹出层</button>
+
+</div>
+<!--浮出层的中心默认在屏幕正中-->
+<!--当浮出层显示时，屏幕滚动时，浮出层始终保持位置固定在屏幕正中，不随屏幕滚动而变化位置。或者禁止页面在有浮出层出现时滚动-->
+<!--当浮出层显示时，点击浮出层以外的部分，默认为关闭浮出层。可以实现一个半透明的遮罩来挡住浮出层外的部分-->
+<!--浮出层的样式、内容和逻辑尽量解耦-->
+<!--提供使用JavaScript控制浮出层展现和关闭的接口-->
+<!--浮出层的窗口大小可以是一个默认固定值，也可以是随内容变化而自适应变化，也可以是通过接口参数进行调整，自行根据自己能力进行选择-->
+<!--有能力的同学可以实现浮出层的拖拽移动浮出窗口位置以及拖拽边缘来放大缩小浮出窗口的功能-->
+<div class="shade">
+</div>
+
+<!--付出层解耦-->
+<article class="fc">
+    <h3>这是一个浮出层</h3>
+    <section class="conent">
+        这是一个浮出层
+    </section>
+    <div class="confirm_btn">
+        <span>确定</span>
+        <span class="bl">取消</span>
+    </div>
+
+</article>
+<script>
+    var shade = document.querySelector(".shade");
+    var fc = document.querySelector(".fc");
+    var tanchu = document.querySelector("#tanchu");
+
+    //点击之后先弹出框
+    tanchu.onclick = function () {
+        shade.style.display = "block";
+        fc.style.display = "block";
+        document.querySelector("body").setAttribute("class", 'hide');
+        document.addEventListener('touchmove', function (e) {
+            document.querySelector("body").setAttribute("class", 'hide');
+            e.stopPropagation();
+            e.preventDefault();
+        }, false);
+    };
+    shade.onclick = function () {
+        shade.style.display = "none";
+        fc.style.display = "none";
+        document.querySelector("body").removeAttribute("class", 'hide');
+
+    };
+
+
+</script>
+</body>
+</html>
