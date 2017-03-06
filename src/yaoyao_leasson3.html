@@ -44,10 +44,13 @@
             padding-left: 15px;
             font-size: 17px;
         }
-
-        .workerContent {
+        .studentContent{
             display: none;
             margin-top: 20px;
+        }
+        .workerContent {
+            display: none;
+            margin-top: 40px;
         }
     </style>
 </head>
@@ -81,6 +84,8 @@
 </div>
 <script type="application/javascript">
     var cities = new Object();
+    var indexcity = [];
+
     cities['北京'] = new Array('清华大学', '北京大学', '中国科技', '北京师范大学', '中国人民大学');
     cities['上海'] = new Array('复旦大学', '上海交通大学', '同济大学', '南开大学');
     cities['浙江'] = new Array(' 浙江大学');
@@ -101,26 +106,21 @@
             ele.attachEvent(on + "event", fn)
         }
     }
-    for (var i = 1; i < areas.length; i++) {
+    addHandle(cityoption, 'change', function () {
+        school.innerHTML = "";
+        var index = cityoption.selectedIndex;
+        var nowvalue = cityoption.options[index].innerHTML;
+        var newoptions = cities[nowvalue];
+//添加变换的事件，对于每一个对应的第一个的值
+        for (var z = 0; z < newoptions.length; z++) {
+            var newoption = document.createElement('option');
+            newoption.innerHTML = newoptions[z];
+            school.appendChild(newoption);
 
-        (function (i) {
-            addHandle(cityoption, 'change', function () {
-                school.innerHTML = "";
-                console.log(areas[i].innerHTML);
-                var indexcity = areas[i].innerHTML;
-                //option 中的内容areas[i].innerHTML
-                //在cities中匹配
-//                cities[areas[i].innerHTML]
-                newoptions = cities[indexcity];
-                console.log(newoptions);
+        }
+    });
 
-                        console.log(newoptions[z]);
-                        var newoption = document.createElement('option');
-                        newoption.innerHTML = newoptions[z];
-                        school.appendChild(newoption);
-            })
-        })(i)
-    }
+    //
     addHandle(identitys[0], 'click', function () {
 
         studentContent.style.display = "block";
