@@ -128,7 +128,6 @@
         <span>确定</span>
         <span class="bl">取消</span>
     </div>
-
 </article>
 <script>
     var shade = document.querySelector(".shade");
@@ -140,11 +139,11 @@
         shade.style.display = "block";
         fc.style.display = "block";
         document.querySelector("body").setAttribute("class", 'hide');
-        document.addEventListener('touchmove', function (e) {
-            document.querySelector("body").setAttribute("class", 'hide');
-            e.stopPropagation();
-            e.preventDefault();
-        }, false);
+//        document.addEventListener('touchmove', function (e) {
+//            document.querySelector("body").setAttribute("class", 'hide');
+//            e.stopPropagation();
+//            e.preventDefault();
+//        }, false);
     };
     shade.onclick = function () {
         shade.style.display = "none";
@@ -152,6 +151,45 @@
         document.querySelector("body").removeAttribute("class", 'hide');
 
     };
+    //添加拖动事件
+    var clientx = 0, clienty = 0;
+    fc.onmousedown = function (e) {
+        //先去获取坐标
+        e = e || window.event;
+                disX = e.clientX - this.offsetLeft;
+                disY = e.clientY - this.offsetTop;
+
+        document.onmousemove = function (e) {
+            e = e || window.event;
+            nowx = (e.clientX - clientx) ;
+            nowy = (e.clientY - clienty) ;
+            console.log(nowx ,nowy);
+
+//            if(nowx<0){
+//                fc.style.left = "0px";
+//
+//            }else if(nowx>document.body.clientWidth-fc.offsetWidth){
+//                nowx=document.body.clientWidth-fc.offsetWidth;
+//                fc.style.left = nowx+"px";
+//
+//            }
+//            if(nowy<0){
+//                fc.style.top = "0px"
+//
+//            }else if(nowy>document.body.clientHeight-fc.offsetTop){
+//                fc.style.top = document.body.clientHeight-fc.offsetTop+"px"
+////            }
+            fc.style.left = nowx+"px";
+            fc.style.top = nowy+"px";
+
+        }
+        document.onmouseup = function () {
+            document.onmousemove = null;
+            document.onmouseup = null;
+        }
+        return false;
+    }
+
 
 
 </script>
